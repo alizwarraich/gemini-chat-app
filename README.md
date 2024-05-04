@@ -1,1 +1,1 @@
-# gemini-chat-app
+# Full Stack Chat Application using Gemini API
