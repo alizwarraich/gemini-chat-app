@@ -1,4 +1,4 @@
-# Remix.js Application with Postgres, Prisma, Tailwind CSS, and Shady
+# Remix.js Application with Postgres, Prisma, Tailwind CSS, and Shadcn
 
 ## Project Setup
 
