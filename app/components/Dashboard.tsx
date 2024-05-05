@@ -44,10 +44,22 @@ import {
     TooltipProvider,
 } from "~/components/ui/tooltip";
 import { ModeToggle } from "./mode-toggle";
+import { Form } from "@remix-run/react";
+import { $Enums } from "@prisma/client";
 
-export function Dashboard() {
+type DashboardProps = {
+    messages: {
+        id: string;
+        createdAt: string;
+        content: string;
+        role: $Enums.Role;
+        sessionId: string;
+    }[];
+};
+
+export function Dashboard({ messages }: DashboardProps) {
     return (
-        <div className="grid h-screen w-full pl-[56px]">
+        <div className="max-h-[100vh] overflow-hidden grid h-screen w-full pl-[56px]">
             <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
                 <div className="border-b p-2">
                     <Button variant="outline" size="icon" aria-label="Home">
@@ -496,7 +508,7 @@ export function Dashboard() {
                                     <Textarea
                                         id="content"
                                         placeholder="You are a..."
-                                        className="min-h-[9.5rem]"
+                                        className="min-h-[7.25rem]"
                                     />
                                 </div>
                             </fieldset>
@@ -509,13 +521,40 @@ export function Dashboard() {
                         >
                             Output
                         </Badge>
-                        <div className="flex-1" />
-                        <form className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
+                        <div className="flex-1">
+                            <div className="mt-8 grid gap-4">
+                                {messages.map((message) => (
+                                    <div
+                                        key={message.id}
+                                        className={`flex gap-2 ${
+                                            message.role === "BOT"
+                                                ? "justify-start"
+                                                : "justify-end"
+                                        }`}
+                                    >
+                                        <div
+                                            className={`px-3 py-2 rounded ${
+                                                message.role === "USER"
+                                                    ? "bg-primary text-secondary"
+                                                    : "bg-secondary text-primary"
+                                            }`}
+                                        >
+                                            <p>{message.content}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <Form
+                            method="post"
+                            className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
+                        >
                             <Label htmlFor="message" className="sr-only">
                                 Message
                             </Label>
                             <Textarea
                                 id="message"
+                                name="message"
                                 placeholder="Type your message here..."
                                 className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
                             />
@@ -523,7 +562,11 @@ export function Dashboard() {
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <Button variant="ghost" size="icon">
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                            >
                                                 <Paperclip className="size-4" />
                                                 <span className="sr-only">
                                                     Attach file
@@ -531,14 +574,18 @@ export function Dashboard() {
                                             </Button>
                                         </TooltipTrigger>
                                         <TooltipContent side="top">
-                                            Attach File
+                                            Attach File (coming soon)
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <Button variant="ghost" size="icon">
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                            >
                                                 <Mic className="size-4" />
                                                 <span className="sr-only">
                                                     Use Microphone
@@ -546,7 +593,7 @@ export function Dashboard() {
                                             </Button>
                                         </TooltipTrigger>
                                         <TooltipContent side="top">
-                                            Use Microphone
+                                            Use Microphone (coming soon)
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
@@ -559,7 +606,7 @@ export function Dashboard() {
                                     <CornerDownLeft className="size-3.5" />
                                 </Button>
                             </div>
-                        </form>
+                        </Form>
                     </div>
                 </main>
             </div>

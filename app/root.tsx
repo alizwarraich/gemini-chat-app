@@ -1,6 +1,5 @@
 import {
     Links,
-    LiveReload,
     Meta,
     Outlet,
     Scripts,
@@ -14,7 +13,7 @@ import {
     ThemeProvider,
     useTheme,
 } from "remix-themes";
-import { themeSessionResolver } from "./sessions.server";
+import { themeSessionResolver } from "./server/sessions.server";
 
 import stylesheet from "~/tailwind.css?url";
 
@@ -44,6 +43,7 @@ export default function AppWithProviders() {
 export function App() {
     const data = useLoaderData<typeof loader>();
     const [theme] = useTheme();
+
     return (
         <html lang="en" className={clsx(theme)}>
             <head>
@@ -60,7 +60,6 @@ export function App() {
                 <Outlet />
                 <ScrollRestoration />
                 <Scripts />
-                <LiveReload />
             </body>
         </html>
     );
