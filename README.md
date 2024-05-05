@@ -1,4 +1,4 @@
-# Remix.js Application with Postgres, Prisma, Tailwind CSS, and Shadcn
+# Full Stack Chat Application on Remix.js using Postgres, Prisma, Tailwind CSS, and Shadcn
 
 ## Project Setup
 
