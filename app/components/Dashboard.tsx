@@ -527,14 +527,14 @@ export function Dashboard({ messages }: DashboardProps) {
                                     <div
                                         key={message.id}
                                         className={`flex gap-2 ${
-                                            message.role === "BOT"
+                                            message.role === "model"
                                                 ? "justify-start"
                                                 : "justify-end"
                                         }`}
                                     >
                                         <div
                                             className={`px-3 py-2 rounded ${
-                                                message.role === "USER"
+                                                message.role === "user"
                                                     ? "bg-primary text-secondary"
                                                     : "bg-secondary text-primary"
                                             }`}

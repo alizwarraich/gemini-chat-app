@@ -62,7 +62,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         await prisma.message.create({
             data: {
                 content: message,
-                role: "USER",
+                role: "user",
                 sessionId,
             },
         });
@@ -75,7 +75,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         await prisma.message.create({
             data: {
                 content: textResponse,
-                role: "BOT",
+                role: "model",
                 sessionId,
             },
         });
