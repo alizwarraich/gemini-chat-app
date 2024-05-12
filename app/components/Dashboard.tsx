@@ -5,6 +5,7 @@ import {
     Code2,
     CornerDownLeft,
     LifeBuoy,
+    LoaderPinwheelIcon,
     Mic,
     Paperclip,
     Rabbit,
@@ -46,6 +47,7 @@ import {
 import { ModeToggle } from "./mode-toggle";
 import { Form } from "@remix-run/react";
 import { $Enums } from "@prisma/client";
+import { useEffect } from "react";
 
 type DashboardProps = {
     messages: {
@@ -55,9 +57,28 @@ type DashboardProps = {
         role: $Enums.Role;
         sessionId: string;
     }[];
+    message: string;
+    setMessage: React.Dispatch<React.SetStateAction<string>>;
+    navigationState: "idle" | "loading" | "submitting";
 };
 
-export function Dashboard({ messages }: DashboardProps) {
+export function Dashboard({
+    messages,
+    message,
+    setMessage,
+    navigationState,
+}: DashboardProps) {
+    // scroll to bottom of the chat window
+    useEffect(() => {
+        const chatWindow = document.getElementById("message-area");
+        if (chatWindow?.scrollTo) {
+            chatWindow.scrollTo({
+                top: chatWindow.scrollHeight,
+                behavior: "smooth",
+            });
+        }
+    }, [messages]);
+
     return (
         <div className="max-h-[100vh] overflow-hidden grid h-screen w-full pl-[56px]">
             <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
@@ -514,14 +535,17 @@ export function Dashboard({ messages }: DashboardProps) {
                             </fieldset>
                         </form>
                     </div>
-                    <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
+                    <div className="relative h-full max-h-[calc(100vh-5.5rem)] rounded-xl bg-muted/50 p-4 lg:col-span-2">
                         <Badge
                             variant="outline"
-                            className="absolute right-3 top-3"
+                            className="absolute right-3 top-3 bg-background"
                         >
                             Output
                         </Badge>
-                        <div className="flex-1">
+                        <div
+                            id="message-area"
+                            className="max-h-[calc(100%-7.75rem)] overflow-y-auto flex-1 scrollbar-hidden"
+                        >
                             <div className="mt-8 grid gap-4">
                                 {messages.map((message) => (
                                     <div
@@ -539,7 +563,9 @@ export function Dashboard({ messages }: DashboardProps) {
                                                     : "bg-secondary text-primary"
                                             }`}
                                         >
-                                            <p>{message.content}</p>
+                                            {message.content || (
+                                                <LoaderPinwheelIcon className="size-5 animate-spin" />
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -547,14 +573,26 @@ export function Dashboard({ messages }: DashboardProps) {
                         </div>
                         <Form
                             method="post"
-                            className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
+                            className="absolute bottom-0 left-0 w-[calc(100%-2rem)] m-4 overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
                         >
                             <Label htmlFor="message" className="sr-only">
                                 Message
                             </Label>
                             <Textarea
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault();
+                                        e.currentTarget.form?.dispatchEvent(
+                                            new Event("submit", {
+                                                bubbles: true,
+                                            })
+                                        );
+                                    }
+                                }}
                                 id="message"
                                 name="message"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Type your message here..."
                                 className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
                             />
@@ -601,8 +639,11 @@ export function Dashboard({ messages }: DashboardProps) {
                                     type="submit"
                                     size="sm"
                                     className="ml-auto gap-1.5"
+                                    disabled={
+                                        navigationState !== "idle" || !message
+                                    }
                                 >
-                                    Send Message
+                                    <span>Send Message</span>
                                     <CornerDownLeft className="size-3.5" />
                                 </Button>
                             </div>

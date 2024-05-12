@@ -4,7 +4,8 @@ import {
     MetaFunction,
     json,
 } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { Dashboard } from "~/components/Dashboard";
 import { prisma } from "~/server/db.server";
 import { model } from "~/server/model.server";
@@ -34,6 +35,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
         return json({
             messages,
+            sessionId,
         });
     } catch (error) {
         console.error(error);
@@ -90,8 +92,44 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 const App = () => {
-    const { messages } = useLoaderData<typeof loader>();
-    return <Dashboard messages={messages} />;
+    const { messages, sessionId } = useLoaderData<typeof loader>();
+    const { state } = useNavigation();
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        if (state === "loading" && message) {
+            setMessage("");
+        }
+    }, [state, message]);
+
+    return (
+        <Dashboard
+            messages={
+                state === "submitting" && message
+                    ? [
+                          ...messages,
+                          {
+                              content: message,
+                              role: "user",
+                              createdAt: new Date().toISOString(),
+                              id: "user-temp",
+                              sessionId: sessionId,
+                          },
+                          {
+                              content: "",
+                              role: "model",
+                              createdAt: new Date().toISOString(),
+                              id: "model-temp",
+                              sessionId: sessionId,
+                          },
+                      ]
+                    : messages
+            }
+            message={message}
+            setMessage={setMessage}
+            navigationState={state}
+        />
+    );
 };
 
 export default App;
