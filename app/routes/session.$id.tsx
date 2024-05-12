@@ -1,8 +1,21 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+    ActionFunctionArgs,
+    LoaderFunctionArgs,
+    MetaFunction,
+    json,
+} from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Dashboard } from "~/components/Dashboard";
 import { prisma } from "~/server/db.server";
 import { model } from "~/server/model.server";
+
+export const meta: MetaFunction = ({ params }) => {
+    const sessionId = params.id;
+    return [
+        { title: `ChatGenie - Custom Session ${sessionId}` },
+        { name: "description", content: "Welcome to ChatGenie!" },
+    ];
+};
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
     const sessionId = params.id;
