@@ -21,7 +21,6 @@ export const meta: MetaFunction = ({ params }) => {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
     const sessionId = params.id;
     if (!sessionId) {
-        console.error("Session does not exist");
         throw new Error("Session does not exist");
     }
 
@@ -31,6 +30,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
             where: {
                 sessionId,
             },
+            orderBy: {
+                createdAt: "asc",
+            },
         });
 
         return json({
@@ -38,7 +40,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
             sessionId,
         });
     } catch (error) {
-        console.error(error);
+        console.error(JSON.stringify(error));
         throw new Error("Failed to fetch messages");
     }
 };

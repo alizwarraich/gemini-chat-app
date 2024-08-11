@@ -17,6 +17,9 @@ import {
     Triangle,
     Turtle,
 } from "lucide-react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -46,7 +49,6 @@ import {
 } from "~/components/ui/tooltip";
 import { ModeToggle } from "./mode-toggle";
 import { Form } from "@remix-run/react";
-import { $Enums } from "@prisma/client";
 import { useEffect } from "react";
 
 type DashboardProps = {
@@ -54,7 +56,7 @@ type DashboardProps = {
         id: string;
         createdAt: string;
         content: string;
-        role: $Enums.Role;
+        role: "user" | "model";
         sessionId: string;
     }[];
     message: string;
@@ -563,7 +565,16 @@ export function Dashboard({
                                                     : "bg-secondary text-primary"
                                             }`}
                                         >
-                                            {message.content || (
+                                            {message.content?.length > 0 ? (
+                                                <Markdown
+                                                    remarkPlugins={[
+                                                        remarkGfm,
+                                                        remarkBreaks,
+                                                    ]}
+                                                >
+                                                    {message.content}
+                                                </Markdown>
+                                            ) : (
                                                 <LoaderPinwheelIcon className="size-5 animate-spin" />
                                             )}
                                         </div>
@@ -591,9 +602,14 @@ export function Dashboard({
                                 }}
                                 id="message"
                                 name="message"
-                                value={message}
+                                value={
+                                    navigationState === "submitting"
+                                        ? ""
+                                        : message
+                                }
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Type your message here..."
+                                disabled={navigationState !== "idle"}
                                 className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
                             />
                             <div className="flex items-center p-3 pt-0">
@@ -638,7 +654,7 @@ export function Dashboard({
                                 <Button
                                     type="submit"
                                     size="sm"
-                                    className="ml-auto gap-1.5"
+                                    className="ml-auto gap-1.5 disabled:cursor-not-allowed"
                                     disabled={
                                         navigationState !== "idle" || !message
                                     }

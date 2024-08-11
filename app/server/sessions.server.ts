@@ -4,7 +4,7 @@ import { createThemeSessionResolver } from "remix-themes";
 // You can default to 'development' if process.env.NODE_ENV is not set
 const isProduction = process.env.NODE_ENV === "production";
 
-const sessionStorage = createCookieSessionStorage({
+const themeSessionStorage = createCookieSessionStorage({
     cookie: {
         name: "theme",
         path: "/",
@@ -18,4 +18,16 @@ const sessionStorage = createCookieSessionStorage({
     },
 });
 
-export const themeSessionResolver = createThemeSessionResolver(sessionStorage);
+export const sessionStorage = createCookieSessionStorage({
+    cookie: {
+        name: "_session",
+        sameSite: "lax", // this helps with CSRF
+        path: "/",
+        httpOnly: true,
+        secrets: ["s3cr3t"],
+        secure: isProduction, // enable this in prod only
+    },
+});
+
+export const themeSessionResolver =
+    createThemeSessionResolver(themeSessionStorage);
