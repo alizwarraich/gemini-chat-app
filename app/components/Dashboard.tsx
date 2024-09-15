@@ -20,6 +20,7 @@ import {
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import rehypeHighlight from "rehype-highlight";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -559,7 +560,7 @@ export function Dashboard({
                                         }`}
                                     >
                                         <div
-                                            className={`px-3 py-2 rounded ${
+                                            className={`flex flex-col gap-4 px-3 py-2 rounded ${
                                                 message.role === "user"
                                                     ? "bg-primary text-secondary"
                                                     : "bg-secondary text-primary"
@@ -571,6 +572,13 @@ export function Dashboard({
                                                         remarkGfm,
                                                         remarkBreaks,
                                                     ]}
+                                                    rehypePlugins={[
+                                                        rehypeHighlight,
+                                                    ]}
+                                                    remarkRehypeOptions={{
+                                                        allowDangerousHtml:
+                                                            true,
+                                                    }}
                                                 >
                                                     {message.content}
                                                 </Markdown>
