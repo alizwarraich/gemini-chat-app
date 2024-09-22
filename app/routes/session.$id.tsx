@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { Dashboard } from "~/components/Dashboard";
+import { Dashboard } from "~/components/Dashboard/Dashboard";
 import { prisma } from "~/server/db.server";
 import { model } from "~/server/model.server";
 
