@@ -7,6 +7,7 @@ import {
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { Dashboard } from "~/components/Dashboard/Dashboard";
+import { authenticator } from "~/server/auth.server";
 import { prisma } from "~/server/db.server";
 import { model } from "~/server/model.server";
 
@@ -18,7 +19,12 @@ export const meta: MetaFunction = ({ params }) => {
     ];
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+    // if the user is not authenticated, redirect to "/login"
+    await authenticator.isAuthenticated(request, {
+        failureRedirect: "/login",
+    });
+
     const sessionId = params.id;
     if (!sessionId) {
         throw new Error("Session does not exist");

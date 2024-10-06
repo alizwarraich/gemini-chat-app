@@ -6,12 +6,12 @@ import {
     CornerDownLeft,
     LifeBuoy,
     LoaderPinwheelIcon,
+    LogOut,
     Mic,
     Paperclip,
     Rabbit,
     Settings,
     Settings2,
-    Share,
     SquareTerminal,
     SquareUser,
     Triangle,
@@ -382,14 +382,16 @@ export function Dashboard({
                     </Drawer>
                     <div className="ml-auto flex items-center gap-4">
                         <ModeToggle />
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-1.5 text-sm"
-                        >
-                            <Share className="size-3.5" />
-                            Share
-                        </Button>
+                        <Form method="post" action="/api/logout">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5 text-sm"
+                            >
+                                <LogOut className="size-3.5" />
+                                Logout
+                            </Button>
+                        </Form>
                     </div>
                 </header>
                 <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
