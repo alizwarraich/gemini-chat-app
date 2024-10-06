@@ -25,6 +25,7 @@ export default function Signin() {
                         <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
+                            name="email"
                             type="email"
                             placeholder="m@example.com"
                             required
@@ -40,7 +41,12 @@ export default function Signin() {
                                 Forgot your password?
                             </Link>
                         </div>
-                        <Input id="password" type="password" required />
+                        <Input
+                            id="password"
+                            name="password"
+                            type="password"
+                            required
+                        />
                     </div>
                     <Button type="submit" className="w-full">
                         Login

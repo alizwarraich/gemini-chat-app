@@ -1,2 +1,2 @@
 export const getFullName = (firstName: string, lastName: string) =>
-    `${firstName} ${lastName}`;
+    [firstName, lastName].filter(Boolean).join(" ");

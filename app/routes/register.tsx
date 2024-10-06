@@ -4,7 +4,7 @@ import Signup from "~/components/Authentication/Signup";
 import { authenticator } from "~/server/auth.server";
 
 export async function action({ request }: ActionFunctionArgs) {
-    return await authenticator.authenticate("user-pass", request, {
+    return await authenticator.authenticate("login-with-user-pass", request, {
         successRedirect: "/session/cm1cb7int0001a5ldryz4ul6o",
         failureRedirect: "/login",
     });
